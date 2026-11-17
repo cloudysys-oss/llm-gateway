@@ -1,0 +1,6 @@
+<div class="cards">
+  <div class="card">總 Requests<br><b>{{ summary.request_count }}</b></div>
+  <div class="card">總 Tokens<br><b>{{ summary.total_tokens }}</b></div>
+  <div class="card">平均/請求<br><b>{{ summary.avg_tokens | round(0) }}</b></div>
+</div>
+<div class="card">{{ chart_svg | safe }}</div>

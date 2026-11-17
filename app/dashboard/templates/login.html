@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="container" style="max-width:360px;">
+  <h2>LLM Gateway 登入</h2>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form method="post" action="/_gateway/login">
+    <input type="password" name="password" placeholder="密碼" autofocus>
+    <button type="submit">登入</button>
+  </form>
+</div>
+{% endblock %}

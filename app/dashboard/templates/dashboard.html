@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="nav"><b>LLM Gateway</b> <a href="/_gateway/logout" style="margin-left:auto;">登出</a></div>
+<div class="container">
+  <h3>新增 Project</h3>
+  <form method="post" action="/_gateway/dashboard/projects">
+    <input type="text" name="name" placeholder="Project 名稱" required>
+    <button type="submit">建立</button>
+  </form>
+
+  <table>
+    <tr>
+      <th>Project</th>
+      <th>今日 Requests</th><th>今日 Tokens</th>
+      <th>本月 Requests</th><th>本月 Tokens</th>
+      <th>總 Requests</th><th>總 Tokens</th>
+      <th>狀態</th>
+    </tr>
+    {% for p in projects %}
+    <tr>
+      <td><a href="/_gateway/dashboard/{{ p.id }}">{{ p.name }}</a></td>
+      <td>{{ p.today_request_count }}</td>
+      <td>{{ p.today_total_tokens }}</td>
+      <td>{{ p.month_request_count }}</td>
+      <td>{{ p.month_total_tokens }}</td>
+      <td>{{ p.request_count }}</td>
+      <td>{{ p.total_tokens }}</td>
+      <td>
+        {{ "啟用" if p.status == "active" else "停用" }}
+        <form method="post" action="/_gateway/dashboard/{{ p.id }}/toggle-status" style="display:inline;">
+          <button type="submit">{{ "停用" if p.status == "active" else "啟用" }}</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

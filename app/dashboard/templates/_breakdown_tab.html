@@ -1,0 +1,7 @@
+<a href="/_gateway/dashboard/{{ project.id }}/export.csv?tab={{ tab }}">匯出 CSV</a>
+<table>
+  <tr><th>{{ "Label" if tab == "label" else "Model" }}</th><th>Requests</th><th>Tokens</th></tr>
+  {% for row in breakdown %}
+  <tr><td>{{ row.key }}</td><td>{{ row.request_count }}</td><td>{{ row.total_tokens }}</td></tr>
+  {% endfor %}
+</table>

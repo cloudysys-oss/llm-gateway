@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}LLM Gateway{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #0b0d12; color: #e6e6e6; }
+    a { color: #7aa2ff; }
+    .nav { padding: 10px 16px; background: #14171f; display: flex; gap: 12px; align-items: center; }
+    .container { padding: 16px; max-width: 960px; margin: 0 auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #2a2e38; }
+    .card { background: #14171f; border-radius: 8px; padding: 12px; }
+    .cards { display: flex; gap: 10px; margin-bottom: 12px; }
+    .cards .card { flex: 1; }
+    .tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+    .tabs a { padding: 6px 14px; border-radius: 6px; background: #14171f; text-decoration: none; }
+    .tabs a.active { background: #2a3a5c; font-weight: bold; }
+    input, button { padding: 6px 10px; border-radius: 6px; border: 1px solid #2a2e38; }
+    button { background: #2a3a5c; color: white; cursor: pointer; }
+    .error { color: #ff7a7a; }
+  </style>
+</head>
+<body>
+  {% block body %}{% endblock %}
+</body>
+</html>

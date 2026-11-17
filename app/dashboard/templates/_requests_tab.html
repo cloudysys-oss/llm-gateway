@@ -1,0 +1,77 @@
+<h3>API Keys</h3>
+<form method="post" action="/_gateway/dashboard/{{ project.id }}/keys" style="margin-bottom:8px;">
+  <button type="submit">+ 產生新 Key</button>
+</form>
+<table>
+  <tr><th>Key</th><th>建立時間</th><th>狀態</th><th></th></tr>
+  {% for k in api_keys %}
+  <tr>
+    <td><code>{{ k.key_prefix }}</code></td>
+    <td class="local-time" data-utc="{{ k.created_at }}">{{ k.created_at }}</td>
+    <td>{{ "已撤銷" if k.revoked_at else "啟用" }}</td>
+    <td>
+      {% if not k.revoked_at %}
+      <form method="post" action="/_gateway/dashboard/{{ project.id }}/keys/{{ k.id }}/revoke">
+        <button type="submit">撤銷</button>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h3>最近 Requests</h3>
+<a href="/_gateway/dashboard/{{ project.id }}/export.csv?tab=requests">匯出 CSV</a>
+<table id="requests-table">
+  <tr><th>時間</th><th>Label</th><th>Model</th><th>Prompt</th><th>Completion</th><th>總計</th></tr>
+  {% for r in requests %}
+  <tr>
+    <td class="local-time" data-utc="{{ r.created_at }}">{{ r.created_at }}</td>
+    <td>{{ r.label or "" }}</td><td>{{ r.model or "" }}</td>
+    <td>{{ r.prompt_tokens }}</td><td>{{ r.completion_tokens }}</td><td>{{ r.total_tokens }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<script>
+  let lastId = {{ (requests[0].id if requests else 0) }};
+  let polling = false;
+
+  function formatLocalTime(iso) {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}/${pad(d.getMonth() + 1)}/${pad(d.getDate())} ` +
+      `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
+  function addCell(row, text) {
+    const cell = row.insertCell(-1);
+    cell.textContent = text ?? "";
+  }
+
+  document.querySelectorAll(".local-time").forEach((el) => {
+    el.textContent = formatLocalTime(el.dataset.utc);
+  });
+
+  setInterval(async () => {
+    if (polling) return;
+    polling = true;
+    try {
+      const res = await fetch(`/_gateway/dashboard/{{ project.id }}/requests.json?after_id=${lastId}`);
+      const data = await res.json();
+      const table = document.getElementById("requests-table");
+      for (const r of data.requests.reverse()) {
+        const row = table.insertRow(1);
+        addCell(row, formatLocalTime(r.created_at));
+        addCell(row, r.label);
+        addCell(row, r.model);
+        addCell(row, r.prompt_tokens);
+        addCell(row, r.completion_tokens);
+        addCell(row, r.total_tokens);
+        lastId = Math.max(lastId, r.id);
+      }
+    } finally {
+      polling = false;
+    }
+  }, 3000);
+</script>

@@ -1,0 +1,16 @@
+services:
+  gateway:
+    build: .
+    ports:
+      - "${PORT:-8080}:${PORT:-8080}"
+    environment:
+      BACKEND_BASE_URL: ${BACKEND_BASE_URL}
+      BACKEND_API_KEY: ${BACKEND_API_KEY}
+      DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
+      SESSION_SECRET: ${SESSION_SECRET}
+      DATABASE_PATH: /data/gateway.db
+      PORT: ${PORT:-8080}
+      REQUEST_TIMEOUT_SECONDS: ${REQUEST_TIMEOUT_SECONDS:-600}
+    volumes:
+      - ./gateway-data:/data
+    restart: unless-stopped

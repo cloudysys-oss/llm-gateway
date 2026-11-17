@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="container" style="max-width:480px;">
+  <h3>{{ heading }}</h3>
+  <p>這把 Key 只會顯示這一次,請立刻複製保存:</p>
+  <div class="card"><code>{{ raw_key }}</code></div>
+  <p style="margin-top:16px;"><a href="{{ continue_url }}">繼續 &rarr;</a></p>
+</div>
+{% endblock %}

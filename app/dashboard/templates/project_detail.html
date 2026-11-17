@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="nav">
+  <a href="/_gateway/dashboard">&larr; 返回</a> <b>{{ project.name }}</b>
+  <span>{{ "🟢 啟用" if project.status == "active" else "⚪ 停用" }}</span>
+  <form method="post" action="/_gateway/dashboard/{{ project.id }}/toggle-status" style="display:inline;">
+    <button type="submit">{{ "停用" if project.status == "active" else "啟用" }}</button>
+  </form>
+  <a href="/_gateway/logout" style="margin-left:auto;">登出</a>
+</div>
+<div class="container">
+  <div class="tabs">
+    <a href="?tab=overview" class="{{ 'active' if tab == 'overview' else '' }}">Overview</a>
+    <a href="?tab=label" class="{{ 'active' if tab == 'label' else '' }}">By Label</a>
+    <a href="?tab=model" class="{{ 'active' if tab == 'model' else '' }}">By Model</a>
+    <a href="?tab=requests" class="{{ 'active' if tab == 'requests' else '' }}">Requests 🔴</a>
+  </div>
+  {% if tab == 'overview' %}
+    {% include "_overview_tab.html" %}
+  {% elif tab in ('label', 'model') %}
+    {% include "_breakdown_tab.html" %}
+  {% elif tab == 'requests' %}
+    {% include "_requests_tab.html" %}
+  {% endif %}
+</div>
+{% endblock %}
